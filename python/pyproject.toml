@@ -1,0 +1,35 @@
+[build-system]
+requires = ["setuptools>=42", "wheel"]
+build-backend = "setuptools.build_meta"
+
+
+[project]
+name = "usr"
+version = "0.1.1"
+
+description = "Universal Systems Runtime — experimental C core with Python bindings"
+readme = "README.md"
+
+authors = [
+  { name = "Ankit Chaubey", email = "m.ankitchaubey@gmail.com" }
+]
+
+license = { text = "MIT" }
+
+requires-python = ">=3.8"
+
+classifiers = [
+  "Development Status :: 3 - Alpha",
+  "Intended Audience :: Developers",
+  "Topic :: Software Development :: Libraries",
+  "Topic :: System :: Operating System Kernels",
+  "Programming Language :: Python :: 3",
+  "Programming Language :: C",
+  "Operating System :: POSIX :: Linux",
+]
+
+
+[project.urls]
+Homepage = "https://github.com/ankit-chaubey/usr"
+Source = "https://github.com/ankit-chaubey/usr"
+Issues = "https://github.com/ankit-chaubey/usr/issues"

@@ -1,0 +1,8 @@
+#ifndef USR_VERSION_H
+#define USR_VERSION_H
+
+#define USR_VERSION_MAJOR 0
+#define USR_VERSION_MINOR 1
+#define USR_VERSION_PATCH 0
+
+#endif
