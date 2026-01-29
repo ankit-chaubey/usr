@@ -31,7 +31,7 @@ class CMakeBuild(build_ext):
 
 setup(
     name="usr",
-    version="0.1.2",
+    version="0.1.2b1",
 
     author="Ankit Chaubey",
     author_email="m.ankitchaubey@gmail.com",
