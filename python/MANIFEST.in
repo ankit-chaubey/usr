@@ -4,5 +4,4 @@ include CMakeLists.txt
 
 recursive-include src *.c *.h
 recursive-include include *.h
-
 recursive-include usr *.so

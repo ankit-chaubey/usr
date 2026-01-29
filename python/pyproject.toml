@@ -2,10 +2,9 @@
 requires = ["setuptools>=42", "wheel"]
 build-backend = "setuptools.build_meta"
 
-
 [project]
 name = "usr"
-version = "0.1.2"
+version = "0.1.2b1"
 
 description = "Universal Systems Runtime — experimental C core with Python bindings"
 readme = "README.md"
@@ -15,19 +14,16 @@ authors = [
 ]
 
 license = { text = "MIT" }
-
 requires-python = ">=3.8"
 
 classifiers = [
   "Development Status :: 3 - Alpha",
   "Intended Audience :: Developers",
   "Topic :: Software Development :: Libraries",
-  "Topic :: System :: Operating System Kernels",
   "Programming Language :: Python :: 3",
   "Programming Language :: C",
   "Operating System :: POSIX :: Linux",
 ]
-
 
 [project.urls]
 Homepage = "https://github.com/ankit-chaubey/usr"

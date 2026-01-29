@@ -1,19 +1,21 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
+import os
+import subprocess
 from setuptools import setup
 from setuptools.command.build_ext import build_ext
-import subprocess
-import os
 
 HERE = os.path.abspath(os.path.dirname(__file__))
 ROOT = os.path.abspath(os.path.join(HERE, ".."))
 BUILD_DIR = os.path.join(ROOT, "build")
+LIB_DST = os.path.join(HERE, "usr", "_lib")
 
 
 class CMakeBuild(build_ext):
     def run(self):
         os.makedirs(BUILD_DIR, exist_ok=True)
+        os.makedirs(LIB_DST, exist_ok=True)
 
         subprocess.check_call([
             "cmake",
@@ -26,12 +28,18 @@ class CMakeBuild(build_ext):
             "--build", BUILD_DIR,
         ])
 
+        subprocess.check_call([
+            "cp",
+            os.path.join(BUILD_DIR, "libusr.so"),
+            LIB_DST,
+        ])
+
         super().run()
 
 
 setup(
     name="usr",
-    version="0.1.2",
+    version="0.1.2b1",
 
     author="Ankit Chaubey",
     author_email="m.ankitchaubey@gmail.com",
@@ -41,8 +49,8 @@ setup(
         "usr is an experimental systems runtime written in C with optional Python bindings. "
         "It is built as a curiosity-driven project to explore low-level systems concepts such as "
         "binary handling, cryptography, text processing, and ABI boundaries.\n\n"
-        "This package is a pre-release intended for learning, experimentation, and architectural "
-        "exploration. It is not recommended for production use."
+        "This package is a pre-release intended for learning and experimentation. "
+        "It is not recommended for production use."
     ),
     long_description_content_type="text/plain",
 
@@ -64,10 +72,8 @@ setup(
         "Development Status :: 3 - Alpha",
         "Intended Audience :: Developers",
         "Topic :: Software Development :: Libraries",
-        "Topic :: System :: Operating System Kernels",
         "Programming Language :: Python :: 3",
         "Programming Language :: C",
-        "License :: OSI Approved :: MIT License",
         "Operating System :: POSIX :: Linux",
     ],
 
