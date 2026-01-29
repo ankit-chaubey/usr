@@ -28,9 +28,13 @@ class CMakeBuild(build_ext):
             "--build", BUILD_DIR,
         ])
 
+        lib_src = os.path.join(BUILD_DIR, "libusr.so")
+        if not os.path.exists(lib_src):
+            raise RuntimeError("libusr.so was not built")
+
         subprocess.check_call([
             "cp",
-            os.path.join(BUILD_DIR, "libusr.so"),
+            lib_src,
             LIB_DST,
         ])
 
@@ -39,7 +43,7 @@ class CMakeBuild(build_ext):
 
 setup(
     name="usr",
-    version="0.1.2b1",
+    version="0.1.2b2",
 
     author="Ankit Chaubey",
     author_email="m.ankitchaubey@gmail.com",

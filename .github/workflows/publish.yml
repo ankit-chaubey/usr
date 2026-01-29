@@ -1,42 +1,81 @@
-name: Publish to PyPI
+name: Build & Publish Wheels
 
 on:
   workflow_dispatch:
+  push:
+    tags:
+      - "v*"
 
 permissions:
-  id-token: write
   contents: read
+  id-token: write
 
 jobs:
-  publish:
-    runs-on: ubuntu-latest
+  build_wheels:
+    name: Build wheels on ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+
+    strategy:
+      fail-fast: false
+      matrix:
+        os:
+          - ubuntu-latest
+          - macos-latest
+          - windows-latest
 
     steps:
       - uses: actions/checkout@v4
 
-      - uses: actions/setup-python@v5
+      - name: Set up Python
+        uses: actions/setup-python@v5
         with:
           python-version: "3.11"
 
-      - run: |
+      - name: Install system dependencies (Linux)
+        if: runner.os == 'Linux'
+        run: |
           sudo apt-get update
           sudo apt-get install -y cmake build-essential
 
-      - run: |
-          cmake -S . -B build
-          cmake --build build
+      - name: Install system dependencies (macOS)
+        if: runner.os == 'macOS'
+        run: |
+          brew install cmake
 
-      - run: |
-          mkdir -p python/usr/_lib
-          cp build/libusr.so python/usr/_lib/
+      - name: Install system dependencies (Windows)
+        if: runner.os == 'Windows'
+        run: |
+          choco install cmake --installargs 'ADD_CMAKE_TO_PATH=System' -y
 
-      - run: |
-          python -m pip install --upgrade pip
-          pip install build wheel setuptools
+      - name: Build wheels with cibuildwheel
+        uses: pypa/cibuildwheel@v2.16.2
+        env:
+          CIBW_BUILD_VERBOSITY: 1
+          CIBW_SKIP: "*android* *musllinux*"
+          CIBW_ARCHS_MACOS: "universal2"
+          CIBW_BEFORE_BUILD: >
+            cmake -S . -B build &&
+            cmake --build build
 
-      - working-directory: python
-        run: python -m build
-
-      - uses: pypa/gh-action-pypi-publish@release/v1
+      - name: Upload wheels
+        uses: actions/upload-artifact@v4
         with:
-          packages-dir: python/dist
+          name: wheels-${{ matrix.os }}
+          path: wheelhouse/*.whl
+
+
+  publish:
+    name: Publish to PyPI
+    needs: build_wheels
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Download wheels
+        uses: actions/download-artifact@v4
+        with:
+          path: wheelhouse
+
+      - name: Publish to PyPI
+        uses: pypa/gh-action-pypi-publish@release/v1
+        with:
+          packages-dir: wheelhouse
