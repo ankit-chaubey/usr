@@ -48,7 +48,6 @@ The goal is **understanding systems internals**, not shipping a black-box depend
 * ❌ **Not production‑ready**
 * ❌ **Android / Termux has known limitations** (documented)
 
-Current version: **v0.1.1 (pre‑release)**
 
 ---
 
