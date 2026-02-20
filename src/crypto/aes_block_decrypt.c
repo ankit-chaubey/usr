@@ -1,58 +1,91 @@
 #include "aes_tables.h"
+#include "usr/crypto.h"
 #include <stdint.h>
 #include <string.h>
-#include "aes_tables.h"
 
-extern const uint8_t sbox[256];
+extern void usr_aes_tables_init(void);
 
-static int inv_init = 0;
+/* ============================================================
+   AES-256 Decrypt Block — Full 14-round Inverse Cipher
+   ============================================================ */
 
+#define AES256_ROUNDS 14
 
-static uint8_t xtime(uint8_t x) {
-    return (x << 1) ^ ((x >> 7) * 0x1b);
-}
-
-static uint8_t mul(uint8_t x, uint8_t y) {
-    uint8_t r = 0;
-    while (y) {
-        if (y & 1) r ^= x;
-        x = xtime(x);
-        y >>= 1;
-    }
-    return r;
-}
-
-static void inv_sub(uint8_t *s) {
+/* Inverse SubBytes: apply inv_sbox to each byte */
+static void inv_sub_bytes(uint8_t s[16]) {
     for (int i = 0; i < 16; i++) s[i] = inv_sbox[s[i]];
 }
 
-static void inv_shift(uint8_t *s) {
-    uint8_t t[16];
-    memcpy(t, s, 16);
-    s[0]=t[0];  s[4]=t[4];  s[8]=t[8];   s[12]=t[12];
-    s[1]=t[13]; s[5]=t[1];  s[9]=t[5];   s[13]=t[9];
-    s[2]=t[10]; s[6]=t[14]; s[10]=t[2];  s[14]=t[6];
-    s[3]=t[7];  s[7]=t[11]; s[11]=t[15]; s[15]=t[3];
+/*
+ * Inverse ShiftRows:
+ *   Row 0: no shift
+ *   Row 1: right 1
+ *   Row 2: right 2
+ *   Row 3: right 3
+ *
+ * Column-major layout (state[col*4+row]):
+ *   s[0] s[4] s[8]  s[12]   row 0
+ *   s[1] s[5] s[9]  s[13]   row 1
+ *   s[2] s[6] s[10] s[14]   row 2
+ *   s[3] s[7] s[11] s[15]   row 3
+ */
+static void inv_shift_rows(uint8_t s[16]) {
+    uint8_t t;
+    /* Row 1: right 1 */
+    t = s[13]; s[13] = s[9]; s[9] = s[5]; s[5] = s[1]; s[1] = t;
+    /* Row 2: right 2 */
+    t = s[2]; s[2] = s[10]; s[10] = t;
+    t = s[6]; s[6] = s[14]; s[14] = t;
+    /* Row 3: right 3 (= left 1) */
+    t = s[3]; s[3] = s[7]; s[7] = s[11]; s[11] = s[15]; s[15] = t;
 }
 
-static void inv_mix(uint8_t *s) {
-    for (int i = 0; i < 4; i++) {
-        uint8_t *c = s + i*4;
-        uint8_t a=c[0], b=c[1], d=c[2], e=c[3];
-        c[0]=mul(a,14)^mul(b,11)^mul(d,13)^mul(e,9);
-        c[1]=mul(a,9)^mul(b,14)^mul(d,11)^mul(e,13);
-        c[2]=mul(a,13)^mul(b,9)^mul(d,14)^mul(e,11);
-        c[3]=mul(a,11)^mul(b,13)^mul(d,9)^mul(e,14);
+/*
+ * Inverse MixColumns.
+ * Uses precomputed mul9, mul11, mul13, mul14 tables from aes_tables.c.
+ *
+ * Matrix:
+ *   14  11  13   9
+ *    9  14  11  13
+ *   13   9  14  11
+ *   11  13   9  14
+ */
+static void inv_mix_columns(uint8_t s[16]) {
+    for (int col = 0; col < 4; col++) {
+        uint8_t *c = s + col * 4;
+        uint8_t a0 = c[0], a1 = c[1], a2 = c[2], a3 = c[3];
+        c[0] = mul14[a0] ^ mul11[a1] ^ mul13[a2] ^  mul9[a3];
+        c[1] =  mul9[a0] ^ mul14[a1] ^ mul11[a2] ^ mul13[a3];
+        c[2] = mul13[a0] ^  mul9[a1] ^ mul14[a2] ^ mul11[a3];
+        c[3] = mul11[a0] ^ mul13[a1] ^  mul9[a2] ^ mul14[a3];
     }
 }
 
-static void add_key(uint8_t *s, const uint8_t *rk) {
+static void add_round_key(uint8_t s[16], const uint8_t *rk) {
     for (int i = 0; i < 16; i++) s[i] ^= rk[i];
 }
 
-void usr_aes256_decrypt_block(uint8_t block[16], const uint8_t rk[240]) {
+/* ============================================================
+   Full AES-256 Decrypt Block
+   Equivalent Inverse Cipher (AES standard FIPS 197 §5.3)
+   ============================================================ */
 
-    inv_shift(block);
-    inv_sub(block);
-    add_key(block, rk);
+void usr_aes256_decrypt_block(uint8_t block[16], const uint8_t rk[240]) {
+    usr_aes_tables_init();
+
+    /* Initial AddRoundKey with last round key */
+    add_round_key(block, rk + AES256_ROUNDS * 16);
+
+    /* Rounds 13 down to 1 */
+    for (int r = AES256_ROUNDS - 1; r >= 1; r--) {
+        inv_shift_rows(block);
+        inv_sub_bytes(block);
+        add_round_key(block, rk + r * 16);
+        inv_mix_columns(block);
+    }
+
+    /* Final round (no InvMixColumns) */
+    inv_shift_rows(block);
+    inv_sub_bytes(block);
+    add_round_key(block, rk);
 }

@@ -1,42 +1,107 @@
-name: Publish to PyPI
+name: Build & Publish
 
 on:
+  push:
+    tags:
+      - "v*.*.*"
   workflow_dispatch:
 
-permissions:
-  id-token: write
-  contents: read
-
 jobs:
-  publish:
-    runs-on: ubuntu-latest
+  # ── C Library Tests ─────────────────────────────────────────────────────────
+  test-c:
+    name: C tests (${{ matrix.os }})
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-22.04, ubuntu-24.04, macos-14]
+    steps:
+      - uses: actions/checkout@v4
 
+      - name: Build static library
+        run: |
+          mkdir -p build /tmp/objs
+          for f in $(find src -name '*.c'); do
+            gcc -O2 -Iinclude -Isrc/crypto -c "$f" -o /tmp/objs/$(basename ${f%.c}).o
+          done
+          ar rcs build/libusr.a /tmp/objs/*.o
+
+      - name: Build tests
+        run: |
+          for t in tests/test_crypto.c tests/test_encoding.c tests/test_utf8.c \
+                   tests/test_roundtrip.c tests/fuzz_roundtrip.c; do
+            gcc -O2 -Iinclude "$t" build/libusr.a -o build/$(basename ${t%.c})
+          done
+
+      - name: Run tests
+        run: |
+          build/test_utf8
+          build/test_encoding
+          build/test_crypto
+          build/test_roundtrip
+          build/fuzz_roundtrip
+
+  # ── Python Binding Tests ────────────────────────────────────────────────────
+  test-python:
+    name: Python tests (${{ matrix.python }})
+    runs-on: ubuntu-22.04
+    needs: test-c
+    strategy:
+      matrix:
+        python: ["3.9", "3.10", "3.11", "3.12", "3.13"]
     steps:
       - uses: actions/checkout@v4
 
       - uses: actions/setup-python@v5
         with:
-          python-version: "3.11"
+          python-version: ${{ matrix.python }}
 
-      - run: |
-          sudo apt-get update
-          sudo apt-get install -y cmake build-essential
+      - name: Build shared library
+        run: |
+          SRCS=$(find src -name '*.c' | tr '\n' ' ')
+          gcc -O2 -shared -fPIC -Iinclude -Isrc/crypto $SRCS -o python/usr/libusr.so
 
-      - run: |
-          cmake -S . -B build
-          cmake --build build
+      - name: Run Python tests
+        run: |
+          cd python
+          python -m pytest tests/ -v 2>/dev/null || python tests/test_python.py
 
-      - run: |
-          mkdir -p python/usr/_lib
-          cp build/libusr.so python/usr/_lib/
+  # ── Build Wheel ─────────────────────────────────────────────────────────────
+  build-wheel:
+    name: Build wheel
+    runs-on: ubuntu-22.04
+    needs: [test-c, test-python]
+    steps:
+      - uses: actions/checkout@v4
 
-      - run: |
-          python -m pip install --upgrade pip
-          pip install build wheel setuptools
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
 
-      - working-directory: python
-        run: python -m build
+      - name: Build
+        run: |
+          cd python
+          pip install build
+          python -m build --wheel
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: wheel
+          path: python/dist/*.whl
+
+  # ── Publish to PyPI ─────────────────────────────────────────────────────────
+  publish:
+    name: Publish to PyPI
+    runs-on: ubuntu-22.04
+    needs: build-wheel
+    environment: pypi
+    permissions:
+      id-token: write
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: wheel
+          path: dist/
 
       - uses: pypa/gh-action-pypi-publish@release/v1
         with:
-          packages-dir: python/dist
+          packages-dir: dist/

@@ -2,128 +2,84 @@
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
-
 #include "usr/markdown.h"
 #include "usr/html.h"
 #include "usr/entities.h"
 
 #define MAXE 128
-#define MAXL 256
-#define ITERS 3000
+#define ITERS 5000
 
 static const char *atoms[] = {
-    "text", "hello", "world",
-    "*b*", "_i_", "~s~",
-    "`c`",
-    "||sp||",
-    "__u__",
-    "🙂",
-    " "
+    "text", "hello", "world", "foo", "bar", "baz",
+    "*b*", "_i_", "~s~", "`c`", "||sp||", "__u__",
+    "[lnk](https://x.com)", "🙂", "café", " ", "\n"
 };
+static const int natoms = (int)(sizeof(atoms)/sizeof(atoms[0]));
 
-/*
- Best-effort Telegram-style fuzz domain.
- This intentionally avoids pathological grammar.
-*/
-static int is_reasonable_markdown(const char *s) {
-    int star = 0, under = 0, tilde = 0, pipe = 0;
-    int backticks = 0;
-    int has_format = 0;
-
-    for (size_t i = 0; s[i]; i++) {
-
-        if (s[i] == '`')
-            backticks++;
-
-        if (s[i] == '*' || s[i] == '_' || s[i] == '~' || s[i] == '|')
-            has_format = 1;
-
-        /* allow only one inline code span */
-        if (backticks > 2)
-            return 0;
-
-        /* do not mix code with formatting */
-        if (backticks > 0 && has_format && s[i] != '`')
-            return 0;
-
-        /* reject ambiguous marker soup */
-        if ((s[i] == '*' && s[i+1] == '*') ||
-            (s[i] == '_' && s[i+1] == '_') ||
-            (s[i] == '~' && s[i+1] == '~') ||
-            (s[i] == '|' && s[i+1] == '|' && s[i+2] == '|')) {
-            return 0;
-        }
-
-        if (s[i] == '*') star ^= 1;
-        if (s[i] == '_') under ^= 1;
-        if (s[i] == '~') tilde ^= 1;
-
-        if (s[i] == '|' && s[i+1] == '|') {
-            pipe ^= 1;
-            i++;
-        }
-    }
-
-    return !star && !under && !tilde && !pipe;
-}
-
-static void rand_input(char *out) {
-    int n = rand() % 10 + 1;
+static void rand_input(char *out, size_t max) {
+    int n = rand() % 8 + 1;
     out[0] = 0;
-
     for (int i = 0; i < n; i++) {
-        strcat(out, atoms[rand() % (sizeof(atoms) / sizeof(atoms[0]))]);
+        const char *a = atoms[rand() % natoms];
+        if (strlen(out) + strlen(a) + 1 < max) strcat(out, a);
     }
 }
 
 int main(void) {
     srand((unsigned)time(NULL));
+    int pass = 0, fail = 0;
 
-    for (int i = 0; i < ITERS; i++) {
-        char input[MAXL];
-
-        do {
-            rand_input(input);
-        } while (!is_reasonable_markdown(input));
+    for (int iter = 0; iter < ITERS; iter++) {
+        char input[512];
+        rand_input(input, sizeof(input));
 
         usr_entity e1[MAXE], e2[MAXE];
+        char *plain1 = NULL, *plain2 = NULL, *html_out = NULL;
 
-        /* Markdown → entities */
-        size_t n1 = usr_markdown_parse(input, USR_MD_V2, e1, MAXE);
+        size_t n1 = usr_markdown_parse(input, USR_MD_V2, &plain1, e1, MAXE);
+        if (n1 == (size_t)-1) { fail++; continue; }
         n1 = usr_entities_normalize(e1, n1);
 
-        /* Invariant: entities valid */
         for (size_t j = 0; j < n1; j++) {
             if (e1[j].length == 0) {
-                printf("❌ INVALID ENTITY (markdown)\nInput: %s\n", input);
-                return 1;
+                printf("❌ iter %d: zero-length entity after markdown\n  input:[%s]\n", iter, input);
+                fail++; goto cleanup;
             }
         }
 
-        /* entities → HTML */
-        char *html = usr_entities_to_html_rt(input, e1, n1);
-        if (!html) {
-            printf("❌ HTML NULL\nInput: %s\n", input);
-            return 1;
+        html_out = plain1 ? usr_entities_to_html(plain1, e1, n1) : NULL;
+        if (plain1 && !html_out) {
+            printf("❌ iter %d: entities_to_html returned NULL\n  input:[%s]\n", iter, input);
+            fail++; goto cleanup;
         }
 
-        /* HTML → entities */
-        size_t n2 = usr_html_parse(html, e2, MAXE);
-        n2 = usr_entities_normalize(e2, n2);
-
-        /* Invariant: entities valid after round */
-        for (size_t j = 0; j < n2; j++) {
-            if (e2[j].length == 0) {
-                printf("❌ INVALID ENTITY (html)\nInput: %s\nHTML: %s\n",
-                       input, html);
-                free(html);
-                return 1;
+        if (html_out) {
+            size_t n2 = usr_html_parse(html_out, &plain2, e2, MAXE);
+            if (n2 != (size_t)-1) {
+                n2 = usr_entities_normalize(e2, n2);
+                for (size_t j = 0; j < n2; j++) {
+                    if (e2[j].length == 0) {
+                        printf("❌ iter %d: zero-length entity after html\n  input:[%s]\n  html:[%s]\n",
+                               iter, input, html_out);
+                        fail++; goto cleanup;
+                    }
+                }
+                /* Plain text invariant: parse(html(plain1)) == plain1 */
+                if (plain2 && plain1 && strcmp(plain1, plain2) != 0) {
+                    printf("❌ iter %d: plain text mismatch\n  input:[%s]\n  plain1:[%s]\n  html:[%s]\n  plain2:[%s]\n",
+                           iter, input, plain1, html_out, plain2);
+                    fail++; goto cleanup;
+                }
             }
         }
 
-        free(html);
+        pass++;
+
+cleanup:
+        free(plain1); free(plain2); free(html_out);
+        plain1 = plain2 = html_out = NULL;
     }
 
-    printf("✅ Fuzz tests passed (best-effort invariants)\n");
-    return 0;
+    printf("Fuzz: %d/%d passed (%d failed)\n", pass, ITERS, fail);
+    return (fail > 0) ? 1 : 0;
 }
