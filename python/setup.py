@@ -4,7 +4,7 @@ from pathlib import Path
 long_description = (Path(__file__).parent.parent / "README.md").read_text(encoding="utf-8")
 
 setup(
-    name="usr-lib",
+    name="usr",
     version="0.1.3",
     description="Universal Systems Runtime — crypto, encoding, Telegram HTML/Markdown",
     long_description=long_description,

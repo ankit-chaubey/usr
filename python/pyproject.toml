@@ -1,0 +1,38 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.backends.legacy:build"
+
+[project]
+name = "usr"
+version = "0.1.3"
+description = "Universal Systems Runtime — C core with Python bindings"
+readme = { file = "../README.md", content-type = "text/markdown" }
+license = "MIT"
+authors = [{ name = "Ankit Chaubey", email = "m.ankitchaubey@gmail.com" }]
+requires-python = ">=3.10"
+keywords = ["cryptography", "aes", "sha256", "telegram", "markdown", "entities"]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Developers",
+    "Topic :: Software Development :: Libraries",
+    "Topic :: Security :: Cryptography",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Programming Language :: C",
+    "Operating System :: POSIX :: Linux",
+    "Operating System :: MacOS :: MacOS X",
+]
+
+[project.urls]
+Source   = "https://github.com/ankit-chaubey/usr"
+Issues   = "https://github.com/ankit-chaubey/usr/issues"
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["usr*"]
+
+[tool.setuptools.package-data]
+usr = ["libusr.so", "libusr.dylib", "py.typed"]
