@@ -24,33 +24,33 @@ class usr_entity(ctypes.Structure):
         ("extra",  ctypes.c_char_p),
     ]
 
-# Entity type enum values — must match entities.h
+# Entity type enum values — must match entities.h exactly
 class EntityType:
-    MENTION         = 0
-    HASHTAG         = 1
-    CASHTAG         = 2
-    BOT_COMMAND     = 3
-    URL             = 4
-    EMAIL           = 5
-    PHONE_NUMBER    = 6
-    BOLD            = 7
-    ITALIC          = 8
-    UNDERLINE       = 9
-    STRIKETHROUGH   = 10
-    SPOILER         = 11
-    CODE            = 12
-    PRE             = 13
-    TEXT_LINK       = 14
-    TEXT_MENTION    = 15
-    CUSTOM_EMOJI    = 16
-    BLOCKQUOTE      = 17
+    BOLD            = 0
+    ITALIC          = 1
+    UNDERLINE       = 2
+    STRIKETHROUGH   = 3
+    SPOILER         = 4
+    CODE            = 5
+    PRE             = 6
+    TEXT_LINK       = 7
+    CUSTOM_EMOJI    = 8
+    BLOCKQUOTE      = 9
+    MENTION         = 10
+    HASHTAG         = 11
+    CASHTAG         = 12
+    BOT_COMMAND     = 13
+    URL             = 14
+    EMAIL           = 15
+    PHONE_NUMBER    = 16
+    TEXT_MENTION    = 17
 
     _names = {
-        0: "mention", 1: "hashtag", 2: "cashtag", 3: "bot_command",
-        4: "url", 5: "email", 6: "phone_number", 7: "bold", 8: "italic",
-        9: "underline", 10: "strikethrough", 11: "spoiler", 12: "code",
-        13: "pre", 14: "text_link", 15: "text_mention", 16: "custom_emoji",
-        17: "blockquote",
+        0: "bold", 1: "italic", 2: "underline", 3: "strikethrough",
+        4: "spoiler", 5: "code", 6: "pre", 7: "text_link",
+        8: "custom_emoji", 9: "blockquote", 10: "mention", 11: "hashtag",
+        12: "cashtag", 13: "bot_command", 14: "url", 15: "email",
+        16: "phone_number", 17: "text_mention",
     }
 
     @classmethod
