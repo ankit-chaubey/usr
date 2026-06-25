@@ -1,4 +1,4 @@
-"""usr.crypto — SHA-256/512, HMAC, PBKDF2, AES-256-IGE/CBC/CTR, CRC-32, secure random."""
+"""usr.crypto - SHA-256/512, HMAC, PBKDF2, AES-256-IGE/CBC/CTR, CRC-32, secure random."""
 from __future__ import annotations
 import ctypes
 from ._lib import lib, libc

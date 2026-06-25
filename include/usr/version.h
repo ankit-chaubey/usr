@@ -4,7 +4,7 @@
 #define USR_VERSION_MAJOR 0
 #define USR_VERSION_MINOR 1
 #define USR_VERSION_PATCH 3
-#define USR_VERSION_STR   "0.1.3"
+#define USR_VERSION_STR   "0.1.4"
 
 /* Build a single 32-bit version integer for easy comparison */
 #define USR_VERSION_NUM \

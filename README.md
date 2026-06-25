@@ -1,4 +1,4 @@
-# usr — Universal Systems Runtime v0.1.3
+# usr - Universal Systems Runtime v0.1.4
 
 > ⚠️ **Pre-release / Experimental**
 >
@@ -7,18 +7,18 @@
 
 ---
 
-## ✨ What's New in v0.1.3
+## ✨ What's New in v0.1.4
 
-- **All cryptographic bugs fixed** — SHA-256 two-block padding, AES-256 decrypt fully implemented
-- **Complete AES suite** — IGE, CBC (PKCS#7), CTR modes
-- **SHA-512, HMAC-SHA256, PBKDF2** — full streaming + one-shot APIs
+- **All cryptographic bugs fixed** - SHA-256 two-block padding, AES-256 decrypt fully implemented
+- **Complete AES suite** - IGE, CBC (PKCS#7), CTR modes
+- **SHA-512, HMAC-SHA256, PBKDF2** - full streaming + one-shot APIs
 - **Base64, hex, URL, HTML** encoding/decoding
 - **Secure random** via `getrandom()` / `/dev/urandom`
-- **UTF-8/UTF-16 utilities** — decode, encode, validate, codepoint count, offset conversion
-- **Complete Markdown parser + renderer** — V1 and V2, correct UTF-16 offsets
-- **Complete HTML parser + renderer** — all Telegram HTML tags
-- **Entity normalization** — proper nesting via interval-stack algorithm
-- **Python bindings** — all APIs exposed via ctypes, zero external dependencies
+- **UTF-8/UTF-16 utilities** - decode, encode, validate, codepoint count, offset conversion
+- **Complete Markdown parser + renderer** - V1 and V2, correct UTF-16 offsets
+- **Complete HTML parser + renderer** - all Telegram HTML tags
+- **Entity normalization** - proper nesting via interval-stack algorithm
+- **Python bindings** - all APIs exposed via ctypes, zero external dependencies
 
 ---
 

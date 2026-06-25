@@ -1,4 +1,4 @@
-"""usr.markdown — Parse Telegram Markdown V1/V2 ↔ entities, render entities → markdown."""
+"""usr.markdown - Parse Telegram Markdown V1/V2 ↔ entities, render entities → markdown."""
 from __future__ import annotations
 from typing import List, Tuple, Optional
 import ctypes
@@ -8,7 +8,6 @@ from .entities import Entity, _c_array, _from_c
 
 _MAX_ENTITIES = 256
 
-# ── markdown_parse ────────────────────────────────────────────────────────────
 lib.usr_markdown_parse.argtypes = [
     ctypes.c_char_p,                    # markdown text
     ctypes.c_int,                       # version (1 or 2)
@@ -34,7 +33,6 @@ def markdown_parse(
     libc.free(plain_p)
     return plain, _from_c(arr, n)
 
-# ── entities_to_markdown ──────────────────────────────────────────────────────
 lib.usr_entities_to_markdown.argtypes = [
     ctypes.c_char_p,
     ctypes.POINTER(usr_entity),

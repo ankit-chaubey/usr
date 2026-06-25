@@ -8,10 +8,6 @@
 extern "C" {
 #endif
 
-/* ============================================================
-   Telegram MessageEntity types
-   ============================================================ */
-
 typedef enum {
     USR_ENTITY_BOLD          = 0,
     USR_ENTITY_ITALIC        = 1,
@@ -34,10 +30,6 @@ typedef enum {
     _USR_ENTITY_TYPE_COUNT   = 18
 } usr_entity_type;
 
-/* ============================================================
-   usr_entity — a single formatting/semantic span
-   ============================================================ */
-
 typedef struct {
     usr_entity_type type;
     uint32_t        offset;  /* UTF-16 code-unit offset in the plain text */
@@ -46,17 +38,13 @@ typedef struct {
                                 document_id for CUSTOM_EMOJI, user_id for TEXT_MENTION */
 } usr_entity;
 
-/* ============================================================
-   Normalization
-   ============================================================ */
-
 /*
  * Sort and normalize an entity array.
  *
  * Rules (Telegram-compatible):
  *  1. Sort by offset ascending; ties: longer entity first.
  *  2. Properly-nested entities are KEPT (unlike the original which dropped all overlaps).
- *     e.g., BOLD spans [0,10], ITALIC spans [2,6] — valid nesting.
+ *     e.g., BOLD spans [0,10], ITALIC spans [2,6] - valid nesting.
  *  3. Truly overlapping (crossing) spans: the inner one is dropped.
  *  4. Zero-length entities are dropped.
  *
@@ -64,10 +52,6 @@ typedef struct {
  * The array is compacted in-place.
  */
 size_t usr_entities_normalize(usr_entity *e, size_t count);
-
-/* ============================================================
-   Utility
-   ============================================================ */
 
 /* Return a human-readable name for an entity type. */
 const char *usr_entity_type_name(usr_entity_type t);

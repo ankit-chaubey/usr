@@ -1,4 +1,4 @@
-"""usr.binary — Text ↔ binary conversion (ABI-safe wrappers)."""
+"""usr.binary - Text ↔ binary conversion (ABI-safe wrappers)."""
 from __future__ import annotations
 import ctypes
 from ._lib import lib, libc

@@ -4,8 +4,8 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "usr"
-version = "0.1.3"
-description = "Universal Systems Runtime — C core with Python bindings"
+version = "0.1.4"
+description = "Universal Systems Runtime - C core with Python bindings"
 readme = { file = "README.md", content-type = "text/markdown" }
 license = "MIT"
 authors = [{ name = "Ankit Chaubey", email = "m.ankitchaubey@gmail.com" }]

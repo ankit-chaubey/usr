@@ -139,8 +139,8 @@ check("link extra",   ents_h[2].extra, "https://x.com")
 section("Entity normalize")
 raw_e = [
     usr.Entity(usr.EntityType.BOLD, 0, 5),
-    usr.Entity(usr.EntityType.ITALIC, 2, 3),  # nested inside bold — kept
-    usr.Entity(usr.EntityType.ITALIC, 0, 0),  # zero-length — dropped
+    usr.Entity(usr.EntityType.ITALIC, 2, 3),  # nested inside bold - kept
+    usr.Entity(usr.EntityType.ITALIC, 0, 0),  # zero-length - dropped
 ]
 normed = usr.normalize_entities(raw_e)
 check("zero-length dropped", len(normed), 2)

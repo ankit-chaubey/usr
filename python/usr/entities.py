@@ -1,4 +1,4 @@
-"""usr.entities — Telegram MessageEntity handling."""
+"""usr.entities - Telegram MessageEntity handling."""
 from __future__ import annotations
 from dataclasses import dataclass, field
 from typing import Optional, List
@@ -48,7 +48,6 @@ def _from_c(arr, count: int) -> List[Entity]:
         ))
     return result
 
-# ── Normalize ──────────────────────────────────────────────────────────────
 lib.usr_entities_normalize.argtypes = [ctypes.POINTER(usr_entity), ctypes.c_size_t]
 lib.usr_entities_normalize.restype  = ctypes.c_size_t
 

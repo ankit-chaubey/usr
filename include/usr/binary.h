@@ -7,10 +7,6 @@
 extern "C" {
 #endif
 
-/* ============================================================
-   Binary ↔ Text Conversion
-   ============================================================ */
-
 /* Convert a NUL-terminated UTF-8 string to a usr_bytes buffer.
    The returned buffer contains the raw UTF-8 bytes (no NUL).
    Returns an empty buffer (data=NULL) on OOM. */

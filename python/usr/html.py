@@ -1,4 +1,4 @@
-"""usr.html — Parse Telegram HTML ↔ entities, render entities → HTML."""
+"""usr.html - Parse Telegram HTML ↔ entities, render entities → HTML."""
 from __future__ import annotations
 from typing import List, Tuple, Optional
 import ctypes
@@ -8,7 +8,6 @@ from .entities import Entity, _c_array, _from_c
 
 _MAX_ENTITIES = 256
 
-# ── html_parse ────────────────────────────────────────────────────────────────
 lib.usr_html_parse.argtypes = [
     ctypes.c_char_p,                    # html
     ctypes.POINTER(ctypes.c_char_p),    # plain_out (heap, caller frees with free())
@@ -29,7 +28,6 @@ def html_parse(html: str, max_entities: int = _MAX_ENTITIES) -> Tuple[str, List[
     libc.free(plain_p)
     return plain, _from_c(arr, n)
 
-# ── entities_to_html ──────────────────────────────────────────────────────────
 lib.usr_entities_to_html.argtypes = [
     ctypes.c_char_p,
     ctypes.POINTER(usr_entity),

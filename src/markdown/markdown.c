@@ -5,23 +5,14 @@
 #include <string.h>
 #include <stdio.h>
 
-/* ============================================================
-   MarkdownV2 special chars (must be escaped in plain text)
-   ============================================================ */
 static int is_md2_special(char c) {
     return c=='_'||c=='*'||c=='['||c==']'||c=='('||c==')'||
            c=='~'||c=='`'||c=='>'||c=='#'||c=='+'||c=='-'||
            c=='='||c=='|'||c=='{'||c=='}'||c=='.'||c=='!';
 }
 
-/* ============================================================
-   Marker state
-   ============================================================ */
 typedef struct { int active; uint32_t start; } mstate;
 
-/* ============================================================
-   usr_markdown_parse
-   ============================================================ */
 size_t usr_markdown_parse(
     const char           *text,
     usr_markdown_version  version,
@@ -193,10 +184,6 @@ size_t usr_markdown_parse(
     return count;
 }
 
-/* ============================================================
-   usr_entities_to_markdown
-   ============================================================ */
-
 typedef struct {
     uint32_t pos; int open; usr_entity_type type; const char *extra; int idx;
 } md_ev;
@@ -246,7 +233,7 @@ char *usr_entities_to_markdown(
                 if (ev[ei].open && extra && extra[0]) { usr_sb_appends(&sb,extra); usr_sb_appendc(&sb,'\n'); }
                 else if (!ev[ei].open) usr_sb_appendc(&sb,'\n');
             } else if (t==USR_ENTITY_CUSTOM_EMOJI) {
-                /* No markdown syntax — skip */
+                /* No markdown syntax - skip */
             } else {
                 const char *m = NULL;
                 switch(t) {

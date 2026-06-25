@@ -5,8 +5,8 @@ long_description = (Path(__file__).parent.parent / "README.md").read_text(encodi
 
 setup(
     name="usr",
-    version="0.1.3",
-    description="Universal Systems Runtime — crypto, encoding, Telegram HTML/Markdown",
+    version="0.1.4",
+    description="Universal Systems Runtime - crypto, encoding, Telegram HTML/Markdown",
     long_description=long_description,
     long_description_content_type="text/markdown",
     author="usr contributors",

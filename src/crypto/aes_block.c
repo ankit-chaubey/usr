@@ -100,10 +100,6 @@ static void add_round_key(uint8_t s[16], const uint8_t *rk) {
     for (int i = 0; i < 16; i++) s[i] ^= rk[i];
 }
 
-/* ============================================================
-   AES-256 Encrypt Block
-   ============================================================ */
-
 void usr_aes256_encrypt_block(uint8_t block[16], const uint8_t rk[240]) {
     /* Initial AddRoundKey */
     add_round_key(block, rk);

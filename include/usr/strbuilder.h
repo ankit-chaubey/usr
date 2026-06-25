@@ -9,7 +9,7 @@ extern "C" {
 #endif
 
 /* ============================================================
-   usr_sb — String Builder
+   usr_sb - String Builder
    Grows dynamically, always NUL-terminated.
    ============================================================ */
 

@@ -4,10 +4,6 @@
 #include <stdint.h>
 #include <stdio.h>
 
-/* ============================================================
-   BASE64
-   ============================================================ */
-
 static const char B64_STD[] =
     "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
 static const char B64_URL[] =
@@ -151,10 +147,6 @@ uint8_t *usr_base64url_decode_alloc(const char *in, size_t in_len, size_t *out_l
     return out;
 }
 
-/* ============================================================
-   HEX ENCODING
-   ============================================================ */
-
 void usr_hex_encode(const uint8_t *in, size_t in_len, char *out) {
     static const char hex[] = "0123456789abcdef";
     for (size_t i = 0; i < in_len; i++) {
@@ -210,10 +202,6 @@ uint8_t *usr_hex_decode_alloc(const char *in, size_t in_len, size_t *out_len) {
     if (out_len) *out_len = n;
     return out;
 }
-
-/* ============================================================
-   URL ENCODING  (RFC 3986 unreserved chars: A-Z a-z 0-9 - _ . ~)
-   ============================================================ */
 
 static int is_unreserved(unsigned char c) {
     return (c >= 'A' && c <= 'Z') ||
@@ -275,10 +263,6 @@ char *usr_url_decode_alloc(const char *in, size_t in_len) {
     usr_url_decode(in, in_len, out);
     return out;
 }
-
-/* ============================================================
-   HTML ENTITY ESCAPING
-   ============================================================ */
 
 size_t usr_html_escape(const char *in, size_t in_len, char *out) {
     size_t o = 0;

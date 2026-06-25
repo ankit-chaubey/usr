@@ -1,5 +1,5 @@
 """
-usr — Universal Systems Runtime v0.1.3
+usr - Universal Systems Runtime v0.1.4
 Python bindings for the usr C library.
 """
 from .crypto   import (sha256, sha512, hmac_sha256, pbkdf2_sha256,
@@ -14,7 +14,7 @@ from .entities import Entity, EntityType, normalize as normalize_entities
 from .html     import html_parse, entities_to_html
 from .markdown import markdown_parse, entities_to_markdown, MarkdownVersion
 
-__version__ = "0.1.3"
+__version__ = "0.1.4"
 __all__ = [
     "__version__",
     # crypto

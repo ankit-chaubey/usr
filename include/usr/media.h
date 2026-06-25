@@ -8,10 +8,6 @@
 extern "C" {
 #endif
 
-/* ============================================================
-   File I/O
-   ============================================================ */
-
 /* Read an entire file into a heap-allocated buffer.
    Returns a buffer with data!=NULL and len=file_size on success.
    Returns an empty buffer (data=NULL, len=0) on any error. */

@@ -75,10 +75,6 @@ static void sha256_compress(uint32_t state[8], const uint8_t block[64]) {
     state[4] += e; state[5] += f; state[6] += g; state[7] += h;
 }
 
-/* ============================================================
-   Streaming API
-   ============================================================ */
-
 void usr_sha256_init(usr_sha256_ctx *ctx) {
     for (int i = 0; i < 8; i++) ctx->state[i] = H0[i];
     ctx->bitcount = 0;
@@ -157,10 +153,6 @@ void usr_sha256_final(usr_sha256_ctx *ctx, uint8_t out[32]) {
     /* Wipe context */
     memset(ctx, 0, sizeof(*ctx));
 }
-
-/* ============================================================
-   One-shot convenience wrapper
-   ============================================================ */
 
 void usr_sha256(const uint8_t *data, size_t len, uint8_t out[32]) {
     usr_sha256_ctx ctx;

@@ -5,10 +5,6 @@
 extern "C" {
 #endif
 
-/* ============================================================
-   Universal Systems Runtime — Error Codes
-   ============================================================ */
-
 typedef enum {
     USR_OK              =  0,   /* Success */
     USR_ERR             = -1,   /* Generic error */

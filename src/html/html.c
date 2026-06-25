@@ -7,10 +7,6 @@
 #include <stdio.h>
 #include <ctype.h>
 
-/* ============================================================
-   Internal helpers
-   ============================================================ */
-
 static int starts_with_ci(const char *s, const char *t) {
     while (*t) {
         if (tolower((unsigned char)*s) != tolower((unsigned char)*t)) return 0;
@@ -76,10 +72,6 @@ static char *extract_attr(const char *tag_start, const char *tag_end,
     }
     return NULL;
 }
-
-/* ============================================================
-   Tag context for the open-tag stack
-   ============================================================ */
 
 typedef struct {
     usr_entity_type type;
@@ -200,7 +192,7 @@ size_t usr_html_parse(
                 etype = USR_ENTITY_PRE;
                 in_pre++;
                 /* Check for <pre><code class="language-xxx"> */
-                /* Look for language in class attr of next <code> — handled at </pre> */
+                /* Look for language in class attr of next <code> - handled at </pre> */
                 extra = extract_attr(tn_end, tag_end, "class");
                 /* Remove "language-" prefix if present */
                 if (extra && strncmp(extra, "language-", 9) == 0) {
@@ -279,10 +271,6 @@ size_t usr_html_parse(
 
     return count;
 }
-
-/* ============================================================
-   Event-based renderer for entities → HTML
-   ============================================================ */
 
 typedef struct {
     uint32_t        utf16_pos;

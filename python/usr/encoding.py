@@ -1,4 +1,4 @@
-"""usr.encoding — Base64, hex, URL encoding/decoding, HTML escaping."""
+"""usr.encoding - Base64, hex, URL encoding/decoding, HTML escaping."""
 from __future__ import annotations
 import ctypes
 from ._lib import lib, libc
@@ -6,7 +6,6 @@ from ._lib import lib, libc
 def _buf(data: bytes): return (ctypes.c_uint8 * len(data)).from_buffer_copy(data) if data else (ctypes.c_uint8 * 1)()
 def _cbuf(n): return ctypes.create_string_buffer(n)
 
-# ── Base64 ──────────────────────────────────────────────────────────────────
 lib.usr_base64_encode.argtypes     = [ctypes.POINTER(ctypes.c_uint8), ctypes.c_size_t, ctypes.c_char_p]
 lib.usr_base64_encode.restype      = None
 lib.usr_base64url_encode.argtypes  = lib.usr_base64_encode.argtypes
@@ -40,7 +39,6 @@ def base64url_decode(s: str) -> bytes:
     if n == ctypes.c_size_t(-1).value: raise ValueError("Invalid base64url")
     return bytes(out[:n])
 
-# ── Hex ──────────────────────────────────────────────────────────────────────
 lib.usr_hex_encode.argtypes       = [ctypes.POINTER(ctypes.c_uint8), ctypes.c_size_t, ctypes.c_char_p]
 lib.usr_hex_encode.restype        = None
 lib.usr_hex_encode_upper.argtypes = lib.usr_hex_encode.argtypes
@@ -60,7 +58,6 @@ def hex_decode(s: str) -> bytes:
     if n == ctypes.c_size_t(-1).value: raise ValueError("Invalid hex string")
     return bytes(out[:n])
 
-# ── URL encoding ─────────────────────────────────────────────────────────────
 lib.usr_url_encode.argtypes = [ctypes.c_char_p, ctypes.c_size_t, ctypes.c_char_p]
 lib.usr_url_encode.restype  = None
 lib.usr_url_decode.argtypes = [ctypes.c_char_p, ctypes.c_size_t, ctypes.c_char_p]
@@ -76,7 +73,6 @@ def url_decode(s: str) -> str:
     out  = _cbuf(len(data) + 1)
     lib.usr_url_decode(data, len(data), out); return out.value.decode()
 
-# ── HTML escape ───────────────────────────────────────────────────────────────
 lib.usr_html_escape.argtypes   = [ctypes.c_char_p, ctypes.c_size_t, ctypes.c_char_p]
 lib.usr_html_escape.restype    = None
 lib.usr_html_unescape.argtypes = [ctypes.c_char_p, ctypes.c_size_t, ctypes.c_char_p]

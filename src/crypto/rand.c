@@ -21,10 +21,6 @@
 #  define USE_WINCRYPT 1
 #endif
 
-/* ============================================================
-   Fill `len` bytes with cryptographically random data.
-   ============================================================ */
-
 int usr_rand_bytes(uint8_t *out, size_t len) {
     if (!out || len == 0) return 0;
 

@@ -8,18 +8,12 @@
 extern "C" {
 #endif
 
-/* ============================================================
-   usr_bytes — owned growable byte buffer
-   ============================================================ */
 typedef struct {
     uint8_t *data;
     size_t   len;
     size_t   cap;
 } usr_bytes;
 
-/* ============================================================
-   usr_bytes_view — non-owning read-only slice
-   ============================================================ */
 typedef struct {
     const uint8_t *data;
     size_t         len;

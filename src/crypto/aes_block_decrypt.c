@@ -5,10 +5,6 @@
 
 extern void usr_aes_tables_init(void);
 
-/* ============================================================
-   AES-256 Decrypt Block — Full 14-round Inverse Cipher
-   ============================================================ */
-
 #define AES256_ROUNDS 14
 
 /* Inverse SubBytes: apply inv_sbox to each byte */

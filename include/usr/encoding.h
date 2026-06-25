@@ -8,10 +8,6 @@
 extern "C" {
 #endif
 
-/* ============================================================
-   Base64  (RFC 4648 standard alphabet + URL-safe variant)
-   ============================================================ */
-
 /* Returns the number of bytes needed to encode `in_len` bytes.
    Includes NUL terminator. */
 size_t usr_base64_enc_size(size_t in_len);
@@ -40,10 +36,6 @@ uint8_t *usr_base64_decode_alloc(const char *in, size_t in_len, size_t *out_len)
 char    *usr_base64url_encode_alloc(const uint8_t *in, size_t in_len);
 uint8_t *usr_base64url_decode_alloc(const char *in, size_t in_len, size_t *out_len);
 
-/* ============================================================
-   Hex (lowercase and uppercase)
-   ============================================================ */
-
 /* Encode binary to lowercase hex. `out` needs 2*in_len + 1 bytes. */
 void usr_hex_encode(const uint8_t *in, size_t in_len, char *out);
 
@@ -59,10 +51,6 @@ size_t usr_hex_decode(const char *in, size_t in_len, uint8_t *out);
 char    *usr_hex_encode_alloc(const uint8_t *in, size_t in_len);
 uint8_t *usr_hex_decode_alloc(const char *in, size_t in_len, size_t *out_len);
 
-/* ============================================================
-   URL Encoding  (application/x-www-form-urlencoded + RFC 3986)
-   ============================================================ */
-
 /* URL-encode a string. Encodes all non-unreserved chars as %XX.
    `out` needs at most 3*in_len + 1 bytes.
    Returns number of bytes written (excluding NUL). */
@@ -75,10 +63,6 @@ size_t usr_url_decode(const char *in, size_t in_len, char *out);
 /* Heap-allocated wrappers (caller must free) */
 char *usr_url_encode_alloc(const char *in, size_t in_len);
 char *usr_url_decode_alloc(const char *in, size_t in_len);
-
-/* ============================================================
-   HTML Entity Escaping
-   ============================================================ */
 
 /* Escape &, <, >, ", ' to HTML entities.
    `out` needs at most 6*in_len + 1 bytes.

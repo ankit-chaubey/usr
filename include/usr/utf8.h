@@ -8,10 +8,6 @@
 extern "C" {
 #endif
 
-/* ============================================================
-   UTF-8 / UTF-16 Utilities
-   ============================================================ */
-
 /* Decode one UTF-8 codepoint from `s` (at most `len` bytes).
    On success: fills *codepoint and *advance, returns 0.
    On error: returns -1 (invalid sequence, truncated, etc.).

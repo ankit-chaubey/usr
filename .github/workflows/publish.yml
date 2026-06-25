@@ -7,7 +7,7 @@ on:
   workflow_dispatch:
 
 jobs:
-  # ── C Library Tests ─────────────────────────────────────────────────────────
+  # C library tests
   test-c:
     name: C tests (${{ matrix.os }})
     runs-on: ${{ matrix.os }}
@@ -40,7 +40,7 @@ jobs:
           build/test_roundtrip
           build/fuzz_roundtrip
 
-  # ── Python Binding Tests ────────────────────────────────────────────────────
+  # Python binding tests
   test-python:
     name: Python tests (${{ matrix.python }})
     runs-on: ubuntu-22.04
@@ -66,7 +66,7 @@ jobs:
           cd python
           python -m pytest tests/ -v 2>/dev/null || python tests/test_python.py
 
-  # ── Build Wheel ─────────────────────────────────────────────────────────────
+  # Build wheel
   build-wheel:
     name: Build wheel
     runs-on: ubuntu-22.04
@@ -89,7 +89,7 @@ jobs:
           name: wheel
           path: python/dist/*.whl
 
-  # ── Publish to PyPI ─────────────────────────────────────────────────────────
+  # Publish to PyPI
   publish:
     name: Publish to PyPI
     runs-on: ubuntu-22.04

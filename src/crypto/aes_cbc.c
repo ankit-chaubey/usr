@@ -12,10 +12,6 @@ static inline void xor16(uint8_t *a, const uint8_t *b) {
     for (int i = 0; i < 16; i++) a[i] ^= b[i];
 }
 
-/* ============================================================
-   AES-256-CBC Encrypt with PKCS#7 padding
-   ============================================================ */
-
 int usr_aes256_cbc_encrypt(
     const uint8_t *in,  size_t in_len,
     const uint8_t  key[32],
@@ -68,10 +64,6 @@ int usr_aes256_cbc_encrypt(
     *out_len = total;
     return 0;
 }
-
-/* ============================================================
-   AES-256-CBC Decrypt with PKCS#7 unpadding
-   ============================================================ */
 
 int usr_aes256_cbc_decrypt(
     const uint8_t *in,  size_t in_len,

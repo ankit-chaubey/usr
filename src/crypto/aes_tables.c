@@ -84,7 +84,7 @@ const uint8_t mul3[256] = {
 /* Helper macro: GF(2^8) multiply by x, mod 0x11b */
 #define XTIME(x) (((x) << 1) ^ (((x) >> 7) * 0x1b))
 
-/* GF multiply tables — filled by usr_aes_tables_init() */
+/* GF multiply tables - filled by usr_aes_tables_init() */
 static uint8_t _build_init_done = 0;
 uint8_t mul9[256];
 uint8_t mul11[256];

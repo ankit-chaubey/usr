@@ -1,5 +1,5 @@
 """
-usr._structs — Shared ctypes structure definitions matching include/usr/*.h
+usr._structs - Shared ctypes structure definitions matching include/usr/*.h
 """
 import ctypes
 
@@ -24,7 +24,7 @@ class usr_entity(ctypes.Structure):
         ("extra",  ctypes.c_char_p),
     ]
 
-# Entity type enum values — must match entities.h exactly
+# Entity type enum values - must match entities.h exactly
 class EntityType:
     BOLD            = 0
     ITALIC          = 1

@@ -3,10 +3,6 @@
 #include <string.h>
 #include <stdio.h>
 
-/* ============================================================
-   Entity type names
-   ============================================================ */
-
 const char *usr_entity_type_name(usr_entity_type t) {
     switch (t) {
         case USR_ENTITY_BOLD:          return "bold";
@@ -102,7 +98,7 @@ size_t usr_entities_normalize(usr_entity *e, size_t n) {
      *
      * Crossing:
      *   first [0, 6]
-     *   second [4, 10] → second.end (14) > first.end (6) — invalid
+     *   second [4, 10] → second.end (14) > first.end (6) - invalid
      */
     typedef struct {
         uint32_t end;

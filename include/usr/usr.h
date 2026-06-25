@@ -2,10 +2,10 @@
 #define USR_H
 
 /*
- * usr — Universal Systems Runtime
- * Version 0.1.3
+ * usr - Universal Systems Runtime
+ * Version 0.1.4
  *
- * Umbrella header — include this for all public APIs.
+ * Umbrella header - include this for all public APIs.
  */
 
 #include <stddef.h>

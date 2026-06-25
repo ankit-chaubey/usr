@@ -1,10 +1,6 @@
 #include "usr/utf8.h"
 #include <string.h>
 
-/* ============================================================
-   Decode one UTF-8 code point
-   ============================================================ */
-
 int usr_utf8_decode(
     const uint8_t *s,
     size_t         len,
@@ -74,10 +70,6 @@ int usr_utf8_decode(
     return -1;
 }
 
-/* ============================================================
-   Encode one codepoint to UTF-8
-   ============================================================ */
-
 int usr_utf8_encode(uint32_t cp, uint8_t *out) {
     if (!out) return -1;
 
@@ -107,10 +99,6 @@ int usr_utf8_encode(uint32_t cp, uint8_t *out) {
     return -1;
 }
 
-/* ============================================================
-   Validate a UTF-8 string
-   ============================================================ */
-
 int usr_utf8_validate(const uint8_t *s, size_t len) {
     if (!s) return -1;
     size_t i = 0;
@@ -122,10 +110,6 @@ int usr_utf8_validate(const uint8_t *s, size_t len) {
     }
     return 0;
 }
-
-/* ============================================================
-   Count codepoints
-   ============================================================ */
 
 int64_t usr_utf8_codepoint_count(const uint8_t *s, size_t len) {
     if (!s) return -1;
@@ -141,10 +125,6 @@ int64_t usr_utf8_codepoint_count(const uint8_t *s, size_t len) {
     return count;
 }
 
-/* ============================================================
-   Count UTF-16 code units
-   ============================================================ */
-
 int64_t usr_utf8_utf16_units(const uint8_t *s, size_t len) {
     if (!s) return -1;
     int64_t units = 0;
@@ -158,10 +138,6 @@ int64_t usr_utf8_utf16_units(const uint8_t *s, size_t len) {
     }
     return units;
 }
-
-/* ============================================================
-   Byte offset from UTF-16 offset
-   ============================================================ */
 
 size_t usr_utf8_byte_offset_from_utf16(
     const uint8_t *s,
@@ -185,10 +161,6 @@ size_t usr_utf8_byte_offset_from_utf16(
     if (units == utf16_offset) return i; /* end of string */
     return (size_t)-1;
 }
-
-/* ============================================================
-   UTF-16 offset from byte offset
-   ============================================================ */
 
 uint32_t usr_utf8_utf16_offset_from_byte(
     const uint8_t *s,

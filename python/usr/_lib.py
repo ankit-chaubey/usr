@@ -1,5 +1,5 @@
 """
-usr._lib — ctypes loader for libusr.so
+usr._lib - ctypes loader for libusr.so
 """
 import ctypes
 import ctypes.util

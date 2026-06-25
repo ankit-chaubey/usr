@@ -63,7 +63,7 @@ add_library(usr_shared SHARED ${USR_SRC})
 
 set_target_properties(usr        PROPERTIES OUTPUT_NAME "usr")
 set_target_properties(usr_shared PROPERTIES OUTPUT_NAME "usr"
-                                            VERSION 0.1.3
+                                            VERSION 0.1.4
                                             SOVERSION 0)
 
 # =================== Tests ===================
